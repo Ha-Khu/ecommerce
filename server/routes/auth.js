@@ -35,10 +35,11 @@ router.post("/login", async (req, res)=>{
     const passwrodMatch = await bcrypt.compare(password, rows[0].password)
     if(!passwrodMatch){
       res.status(401).json({ error: "Password is wrong"})
+      return
     }
     const token = jwt.sign({id: rows[0].id, email: rows[0].email},
-      process.env.JWT_SECRET, {expiresIn: '1d'}
-    )
+      process.env.JWT_SECRET, {expiresIn: '1d'})
+    res.json({token, message: "Prihlásenie úspešné"})
   } catch(err){
     res.status(500).json({ err: "Login failed"})
   }

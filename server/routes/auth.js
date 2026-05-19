@@ -37,7 +37,7 @@ router.post("/login", async (req, res)=>{
       res.status(401).json({ error: "Password is wrong"})
       return
     }
-    const token = jwt.sign({id: rows[0].id, email: rows[0].email},
+    const token = jwt.sign({id: rows[0].id, email: rows[0].email, role: rows[0].role},
       process.env.JWT_SECRET, {expiresIn: '1d'})
     res.json({token, message: "Prihlásenie úspešné"})
   } catch(err){

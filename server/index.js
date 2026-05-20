@@ -9,7 +9,7 @@ const productRouter = require('./routes/products')
 app.use(cors())
 app.use(express.json())
 app.use('/api/auth', authRouter)
-app.use('/api/products', authRouter)
+app.use('/api/products', productRouter)
 
 app.listen(port, ()=>{
   console.log(`Example app listening on port ${port}`)

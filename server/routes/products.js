@@ -59,3 +59,5 @@ router.put("/:id", verifyToken, isAdmin, async (req, res)=>{
     res.status(500).json({err: "Update failed"})
   }
 })
+
+module.exports = router

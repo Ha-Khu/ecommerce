@@ -38,8 +38,6 @@ function Home(){
             <div key={products.id}>
               <p>{products.name}</p>
               <p>{products.price}</p>
-              <p>{products.quantity}</p>
-              <p>{products.description}</p>
             </div>
           ))
         }

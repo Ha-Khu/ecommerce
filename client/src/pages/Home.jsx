@@ -4,11 +4,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect } from "react"
 import {useState} from 'react'
 import axios from 'axios'
+import { useNavigate, Link } from "react-router-dom"
 
 function Home(){
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const navigate = useNavigate()
 
   useEffect(()=>{
     async function fetchProducts(){
@@ -34,10 +36,10 @@ function Home(){
       </CardHeader>
       <CardContent>
         {
-          products.map((products)=>(
-            <div key={products.id}>
-              <p>{products.name}</p>
-              <p>{products.price}</p>
+          products.map((product)=>(
+            <div key={product.id} onClick={() => navigate(`/product/${product.id}`)}>
+              <p>{product.name}</p>
+              <p>{product.price}</p>
             </div>
           ))
         }

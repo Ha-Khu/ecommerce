@@ -31,6 +31,21 @@ function Cart(){
     fetchCartItems()
   }, [])
 
+  function checkout(){
+    navigate("/checkout")
+  }
+
+  async function removeItem(id){
+    try{
+    await axios.delete(`http://localhost:5000/api/cart/${id}`, {
+      headers: {Authorization: `Bearer ${token}`}
+    })
+    setCartItems(cartItems.filter((item)=> item.id !== id))
+    }catch(err){
+      setError("Deleting Item failed, please try again")
+    }
+  }
+
   if(loading) return(
     <p>Loading ...</p>
   )
@@ -47,9 +62,11 @@ function Cart(){
               <p>{cartItem.name}</p>
               <p>{cartItem.price}</p>
               <p>{cartItem.quantity}</p>
+              <Button onClick={()=> removeItem(cartItem.id)}>Remove</Button>
             </div>
           ))
         }
+        <Button onClick={checkout}>Check Out</Button>
       </CardContent>
     </Card>
   )

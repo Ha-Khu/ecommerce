@@ -8,7 +8,7 @@ const verifyToken = require('../middleware/verifyToken')
 router.get("/", verifyToken, async (req, res)=>{
   try{
     const id = req.user.id
-    let sql = "SELECT * FROM cart WHERE user_id = ?"
+    let sql = "SELECT cart.id, cart.quantity, products.name, products.price FROM cart JOIN products ON cart.product_id = products.id WHERE cart.user_id = ?"
     const [rows] = await db.query(sql, [id])
     res.json(rows)
   }catch(err){

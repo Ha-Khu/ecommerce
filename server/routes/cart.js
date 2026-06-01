@@ -20,8 +20,14 @@ router.post("/", verifyToken, async (req, res)=>{
   try {
     const {quantity, product_id} = req.body
     const user_id = req.user.id
-    let sql = "INSERT INTO cart(quantity, user_id, product_id) VALUES (?, ?, ?)"
-    const [rows] = await db.query(sql, [quantity, user_id, product_id])
+    const [existing] = await db.query("SELECT * FROM cart WHERE user_id = ? AND product_id = ?", [user_id, product_id])
+    if(existing.length > 0){
+      let sql = "UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?"
+      await db.query(sql, [quantity, user_id, product_id])
+    } else {
+      let sql = "INSERT INTO cart(quantity, user_id, product_id) VALUES (?, ?, ?)"
+      await db.query(sql, [quantity, user_id, product_id])
+    }
     res.status(201).json({message: "Cart Inserted"})
   }catch(err){
     res.status(500).json({err: "Insert Failed"})

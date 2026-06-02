@@ -32,7 +32,11 @@ function Cart(){
   }, [])
 
   function checkout(){
-    navigate("/checkout")
+    if(cartItems.length < 1){
+      setError("Nothing in a cart")
+    } else {
+      navigate("/checkout")
+    }
   }
 
   async function removeItem(id){

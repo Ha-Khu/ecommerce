@@ -21,8 +21,12 @@ router.post("/", verifyToken, async (req, res)=>{
     const user_id = req.user.id
     const {total_price, payment_method, delivery_method} = req.body
     let sql = "INSERT INTO orders(total_price, status, payment_method, delivery_method, user_id) VALUES (?, ?, ?, ?, ?)"
-    const [rows] = await connection.query(sql, [total_price, "pending", payment_method, delivery_method, user_id])
     const [cartItems] = await connection.query("SELECT * FROM cart WHERE user_id = ?", [user_id])
+    if(cartItems.length === 0){
+      await connection.rollback()
+      return res.status(400).json({error: "Nothing in a cart"})
+    }
+       const [rows] = await connection.query(sql, [total_price, "pending", payment_method, delivery_method, user_id])
     const order_id = rows.insertId
     for (items of cartItems){
       const product_id = items.product_id

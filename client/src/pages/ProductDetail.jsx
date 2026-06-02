@@ -29,7 +29,7 @@ function ProductDetail(){
 
   async function addToCart(){
     if(!token){
-      navigate("login")
+      navigate("/login")
       return
     }
     try{

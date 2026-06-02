@@ -10,6 +10,7 @@ function ProductDetail(){
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [message, setMessage] = useState("")
   const navigate = useNavigate()
   const {id} = useParams()
   const token = localStorage.getItem('token')
@@ -36,8 +37,11 @@ function ProductDetail(){
       await axios.post("http://localhost:5000/api/cart", {product_id: product.id, quantity: 1}, {
         headers: {Authorization: `Bearer ${token}`}
       })
-    } catch(err){
+      setMessage("Added to cart")
       setError("")
+    } catch(err){
+      setError("Adding to cart failed, please try again")
+      setMessage("")
     }
   } 
 
@@ -56,6 +60,8 @@ function ProductDetail(){
         <p>{product.quantity}</p>
         <p>{product.description}</p>
         <Button onClick={addToCart}>Add to Cart</Button>
+        {error && <p>{error}</p>}
+        {message && <p>{message}</p>}
       </CardContent>
     </Card>
   )

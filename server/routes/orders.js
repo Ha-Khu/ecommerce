@@ -27,9 +27,15 @@ router.post("/", verifyToken, async (req, res)=>{
     for (items of cartItems){
       const product_id = items.product_id
       const quantity = items.quantity
-      const [product] = await connection.query("SELECT price FROM products WHERE id = ?", [product_id])
+      const [product] = await connection.query("SELECT price, quantity FROM products WHERE id = ?", [product_id])
       const price = product[0].price
+      const stock = product[0].quantity
+      if(quantity > stock){
+        await connection.rollback()
+        return res.status(400).json({error: "Not enough pieces"})
+      }
       const [order_items] = await connection.query("INSERT INTO order_items(quantity, price, order_id, product_id) VALUES(?, ?, ?, ?)", [quantity, price, order_id, product_id])
+      await connection.query("UPDATE products SET quantity = quantity - ? WHERE id = ?", [quantity, product_id])
     }
     await connection.query("DELETE FROM cart WHERE user_id = ?", [user_id])
     await connection.commit()

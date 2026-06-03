@@ -3,7 +3,18 @@ const router = express.Router()
 const db = require('../db')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const verifyToken = require('../middleware/verifyToken')
 
+router.get("/me", verifyToken, async (req, res)=>{
+  try{
+    const id = req.user.id
+    let sql = "SELECT id, name, surname, email, role FROM users WHERE id = ?"
+    const [rows] = await db.query(sql, [id])
+    res.json(rows[0])
+  }catch(err){
+    res.status(500).json({err: "Loading failed"})
+  }
+})
 
 router.post("/register", async (req, res) =>{
   try {

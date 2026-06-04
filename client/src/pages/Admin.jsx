@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect } from "react"
 import {useState} from 'react'
@@ -7,6 +8,11 @@ import { useNavigate, Link } from "react-router-dom"
 
 function Admin(){
   const [products, setProducts] = useState([])
+  const [name, setName] = useState("")
+  const [price, setPrice] = useState("")
+  const [quantity, setQuantity] = useState("")
+  const [description, setDescription] = useState("")
+  const [category_id, setCategoryId] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -36,6 +42,23 @@ function Admin(){
     }
     adminCheck()
   }, [])
+
+  async function addProduct(){
+    try{
+      await axios.post("http://localhost:5000/api/products", {name, price, quantity, description, category_id},{
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      const productResponse = await axios.get("http://localhost:5000/api/products")
+      setProducts(productResponse.data)
+      setName("")
+      setPrice("")
+      setQuantity("")
+      setDescription("")
+      setCategoryId("")
+          }catch(err){
+      setError("Insert failed")
+    }
+  }
 
   async function deleteProduct(id){
     try{
@@ -67,6 +90,12 @@ function Admin(){
           ))
         }
         {error && <p>{error}</p>}
+        <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <Input placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+        <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Input placeholder="Category ID" value={category_id} onChange={(e) => setCategoryId(e.target.value)} />
+        <Button onClick={addProduct}>Add Product</Button>
       </CardContent>
     </Card>
   )

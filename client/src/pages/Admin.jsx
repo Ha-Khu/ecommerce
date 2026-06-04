@@ -55,8 +55,25 @@ function Admin(){
       setQuantity("")
       setDescription("")
       setCategoryId("")
-          }catch(err){
+    }catch(err){
       setError("Insert failed")
+    }
+  }
+
+  async function editProduct(id){
+    try{
+      await axios.put(`http://localhost:5000/api/products/${id}`, {name, price, quantity, description, category_id}, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      const productResponse = await axios.get("http://localhost:5000/api/products")
+      setProducts(productResponse.data)
+      setName("")
+      setPrice("")
+      setQuantity("")
+      setDescription("")
+      setCategoryId("")
+    }catch(err){
+      setError("Update failed")
     }
   }
 
@@ -86,6 +103,7 @@ function Admin(){
               <p>{product.quantity}</p>
               <p>{product.description}</p>
               <Button onClick={() => deleteProduct(product.id)}>Delete Product</Button>
+              <Button onClick={() => editProduct(product.id)}>Edit product</Button>
             </div>
           ))
         }

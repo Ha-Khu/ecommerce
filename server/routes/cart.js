@@ -34,6 +34,21 @@ router.post("/", verifyToken, async (req, res)=>{
   }
 })
 
+router.put("/:id", verifyToken, async (req, res)=>{
+  try{
+    const id = req.params.id
+    const {quantity} = req.body
+    if(quantity < 1) {
+      return res.status(400).json({err: "Quantity must be at least 1"})
+    }
+    let sql = "UPDATE cart SET quantity = ? WHERE id = ?"
+    const [rows] = await db.query(sql, [quantity, id])
+    res.status(200).json({message: "Quantity updated"})
+  }catch(err){
+    res.status(500).json({err: "Update Failed"})
+  }
+})
+
 router.delete("/:id", verifyToken, async (req, res)=>{
   try{
     const id = req.params.id

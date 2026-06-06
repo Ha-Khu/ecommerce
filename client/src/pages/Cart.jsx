@@ -39,6 +39,24 @@ function Cart(){
     }
   }
 
+  async function editQuantity(id, quantity){
+    try{
+        if(quantity < 1){
+        setError("Quantity must be atleast 1")
+        return
+      }
+      await axios.put(`http://localhost:5000/api/cart/${id}`, {quantity}, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      const cartResponse = await axios.get("http://localhost:5000/api/cart", {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      setCartItems(cartResponse.data)
+    }catch(err){
+      setError("Update failed, please try again")
+    }
+  }
+
   async function removeItem(id){
     try{
     await axios.delete(`http://localhost:5000/api/cart/${id}`, {
@@ -67,6 +85,10 @@ function Cart(){
               <p>{cartItem.price}</p>
               <p>{cartItem.quantity}</p>
               <Button onClick={()=> removeItem(cartItem.id)}>Remove</Button>
+              <input 
+              type="number"
+              value={cartItem.quantity}
+              onChange={(e) => editQuantity(cartItem.id, Number(e.target.value))} />
             </div>
           ))
         }

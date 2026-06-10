@@ -8,6 +8,8 @@ import { useNavigate, Link } from "react-router-dom"
 
 function Home(){
   const [products, setProducts] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -17,6 +19,8 @@ function Home(){
       try{
       const response = await axios.get("http://localhost:5000/api/products")
       setProducts(response.data)
+      const categoriesResponse = await axios.get("http://localhost:5000/api/categories")
+      setCategories(categoriesResponse.data)
       setLoading(false)
       }catch(err){
         setError("Laoding of products failed, try again")
@@ -29,14 +33,25 @@ function Home(){
     <p>Loading...</p>
   )
 
+    const filteredProducts = products.filter((product)=>{
+      if(selectedCategory === "") return true
+      return product.category_id === Number(selectedCategory)
+    })
+
   return(
     <Card>
       <CardHeader>
         <CardTitle>Home</CardTitle>
       </CardHeader>
       <CardContent>
+        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+          <option value="">Vyber kategóriu</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
+        </select>
         {
-          products.map((product)=>(
+          filteredProducts.map((product)=>(
             <div key={product.id} onClick={() => navigate(`/product/${product.id}`)}>
               <p>{product.name}</p>
               <p>{product.price}</p>

@@ -59,6 +59,7 @@ function ProductDetail(){
         <p>{product.price}</p>
         <p>{product.quantity}</p>
         <p>{product.description}</p>
+        <p>{product.category_name}</p>
         <Button onClick={addToCart}>Add to Cart</Button>
         {error && <p>{error}</p>}
         {message && <p>{message}</p>}

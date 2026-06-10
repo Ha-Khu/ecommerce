@@ -13,6 +13,7 @@ function Admin(){
   const [quantity, setQuantity] = useState("")
   const [description, setDescription] = useState("")
   const [category_id, setCategoryId] = useState("")
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -34,8 +35,10 @@ function Admin(){
           return
         }
         const productResponse = await axios.get("http://localhost:5000/api/products")
-        setLoading(false)
         setProducts(productResponse.data)
+        const categoriesResponse = await axios.get("http://localhost:5000/api/categories")
+        setCategories(categoriesResponse.data)
+        setLoading(false)
       }catch(err){
         setError("Check failed")
       }
@@ -102,6 +105,7 @@ function Admin(){
               <p>{product.price}</p>
               <p>{product.quantity}</p>
               <p>{product.description}</p>
+              <p>{product.category_name}</p>
               <Button onClick={() => deleteProduct(product.id)}>Delete Product</Button>
               <Button onClick={() => editProduct(product.id)}>Edit product</Button>
             </div>
@@ -112,7 +116,12 @@ function Admin(){
         <Input placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
         <Input placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
         <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <Input placeholder="Category ID" value={category_id} onChange={(e) => setCategoryId(e.target.value)} />
+        <select value={category_id} onChange={(e) => setCategoryId(e.target.value)}>
+          <option value="">Vyber kategóriu</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
+      </select>
         <Button onClick={addProduct}>Add Product</Button>
       </CardContent>
     </Card>

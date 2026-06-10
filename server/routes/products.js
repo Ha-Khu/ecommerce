@@ -7,7 +7,7 @@ const isAdmin = require('../middleware/isAdmin.js')
 
 router.get("/", async (req, res)=>{
   try{
-    let sql = "SELECT * FROM products"
+    let sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id"
     const [rows] = await db.query(sql)
     res.json(rows)
   } catch(err){
@@ -17,7 +17,7 @@ router.get("/", async (req, res)=>{
 
 router.get("/:id", async (req, res)=>{
   try{
-    let sql = "SELECT * FROM products WHERE id = ?"
+    let sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.id = ?"
     const id = req.params.id
     const [rows] = await db.query(sql, [id])
     res.json(rows)

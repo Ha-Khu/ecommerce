@@ -40,6 +40,7 @@ function Home(){
             <div key={product.id} onClick={() => navigate(`/product/${product.id}`)}>
               <p>{product.name}</p>
               <p>{product.price}</p>
+              <p>{product.category_name}</p>
             </div>
           ))
         }

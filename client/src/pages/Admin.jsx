@@ -14,6 +14,7 @@ function Admin(){
   const [description, setDescription] = useState("")
   const [category_id, setCategoryId] = useState("")
   const [categories, setCategories] = useState([])
+  const [image_url, setImage] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -48,7 +49,7 @@ function Admin(){
 
   async function addProduct(){
     try{
-      await axios.post("http://localhost:5000/api/products", {name, price, quantity, description, category_id},{
+      await axios.post("http://localhost:5000/api/products", {name, price, quantity, description, category_id, image_url},{
         headers: {Authorization: `Bearer ${token}`}
       })
       const productResponse = await axios.get("http://localhost:5000/api/products")
@@ -58,6 +59,7 @@ function Admin(){
       setQuantity("")
       setDescription("")
       setCategoryId("")
+      setImage("")
     }catch(err){
       setError("Insert failed")
     }
@@ -65,7 +67,7 @@ function Admin(){
 
   async function editProduct(id){
     try{
-      await axios.put(`http://localhost:5000/api/products/${id}`, {name, price, quantity, description, category_id}, {
+      await axios.put(`http://localhost:5000/api/products/${id}`, {name, price, quantity, description, category_id, image_url}, {
         headers: {Authorization: `Bearer ${token}`}
       })
       const productResponse = await axios.get("http://localhost:5000/api/products")
@@ -75,6 +77,7 @@ function Admin(){
       setQuantity("")
       setDescription("")
       setCategoryId("")
+      setImage("")
     }catch(err){
       setError("Update failed")
     }
@@ -116,6 +119,7 @@ function Admin(){
         <Input placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
         <Input placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
         <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Input placeholder="Image URL" value={image_url} onChange={(e) => setImage(e.target.value)} />
         <select value={category_id} onChange={(e) => setCategoryId(e.target.value)}>
           <option value="">Vyber kategóriu</option>
           {categories.map((category) => (

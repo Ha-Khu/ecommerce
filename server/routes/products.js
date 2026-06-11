@@ -28,9 +28,9 @@ router.get("/:id", async (req, res)=>{
 
 router.post("/", verifyToken, isAdmin, async (req, res)=>{
   try{
-    const {name, price, quantity, description, category_id} = req.body
-    let sql = "INSERT INTO products (name, price, quantity, description, category_id) VALUES (?, ?, ?, ?, ?)"
-    const [rows] = await db.query(sql, [name, price, quantity, description, category_id])
+    const {name, price, quantity, description, category_id, image_url} = req.body
+    let sql = "INSERT INTO products (name, price, quantity, description, category_id, image_url) VALUES (?, ?, ?, ?, ?, ?)"
+    const [rows] = await db.query(sql, [name, price, quantity, description, category_id, image_url])
     res.status(201).json({message: "Product inserted"})
   } catch(err){
     res.status(500).json({err: "Insert failed"})
@@ -51,9 +51,9 @@ router.delete("/:id", verifyToken, isAdmin, async (req, res)=>{
 router.put("/:id", verifyToken, isAdmin, async (req, res)=>{
   try {
   const id = req.params.id
-  const {name, price, quantity, description, category_id} = req.body
-  let sql = "UPDATE products SET name = ?, price = ?, quantity = ?, description = ?, category_id = ? WHERE id = ?"
-  const [rows] = await db.query(sql, [name, price, quantity, description, category_id, id])
+  const {name, price, quantity, description, category_id, image_url} = req.body
+  let sql = "UPDATE products SET name = ?, price = ?, quantity = ?, description = ?, category_id = ?, image_url = ? WHERE id = ?"
+  const [rows] = await db.query(sql, [name, price, quantity, description, category_id, image_url, id])
   res.status(200).json({message: "Update successful"})
   } catch(err){
     res.status(500).json({err: "Update failed"})

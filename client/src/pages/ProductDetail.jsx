@@ -60,6 +60,7 @@ function ProductDetail(){
         <p>{product.quantity}</p>
         <p>{product.description}</p>
         <p>{product.category_name}</p>
+        <img src={product.image_url} alt={product.name} />
         <Button onClick={addToCart}>Add to Cart</Button>
         {error && <p>{error}</p>}
         {message && <p>{message}</p>}

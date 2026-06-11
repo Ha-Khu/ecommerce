@@ -56,6 +56,7 @@ function Home(){
               <p>{product.name}</p>
               <p>{product.price}</p>
               <p>{product.category_name}</p>
+              <img src={product.image_url} alt={product.name} />
             </div>
           ))
         }

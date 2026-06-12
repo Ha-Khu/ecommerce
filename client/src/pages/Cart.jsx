@@ -18,7 +18,7 @@ function Cart(){
     }
     async function fetchCartItems(){
       try{
-        const response = await axios.get("http://localhost:5000/api/cart", {
+        const response = await axios.get("${import.meta.env.VITE_API_URL}/api/cart", {
           headers: {Authorization: `Bearer ${token}`}
         })
         setCartItems(response.data)
@@ -44,10 +44,10 @@ function Cart(){
         setError("Quantity must be at least 1")
         return
       }
-      await axios.put(`http://localhost:5000/api/cart/${id}`, {quantity}, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/cart/${id}`, {quantity}, {
         headers: {Authorization: `Bearer ${token}`}
       })
-      const cartResponse = await axios.get("http://localhost:5000/api/cart", {
+      const cartResponse = await axios.get("${import.meta.env.VITE_API_URL}/api/cart", {
         headers: {Authorization: `Bearer ${token}`}
       })
       setCartItems(cartResponse.data)
@@ -58,7 +58,7 @@ function Cart(){
 
   async function removeItem(id){
     try{
-      await axios.delete(`http://localhost:5000/api/cart/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart/${id}`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setCartItems(cartItems.filter((item)=> item.id !== id))

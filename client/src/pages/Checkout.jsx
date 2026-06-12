@@ -20,7 +20,7 @@ function Checkout(){
     }
     async function fetchCartItems(){
       try{
-        const response = await axios.get("http://localhost:5000/api/cart", {
+        const response = await axios.get("${import.meta.env.VITE_API_URL}/api/cart", {
           headers: {Authorization: `Bearer ${token}`}
         })
         setCartItems(response.data)
@@ -34,7 +34,7 @@ function Checkout(){
 
   async function handleOrder(){
     try{
-      await axios.post("http://localhost:5000/api/orders", {total_price: total, payment_method: paymentMethod, delivery_method: deliveryMethod}, {
+      await axios.post("${import.meta.env.VITE_API_URL}/api/orders", {total_price: total, payment_method: paymentMethod, delivery_method: deliveryMethod}, {
         headers: {Authorization: `Bearer ${token}`}
       })
       navigate('/orders')

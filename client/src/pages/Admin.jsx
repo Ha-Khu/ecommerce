@@ -26,7 +26,7 @@ function Admin(){
     }
     async function adminCheck(){
       try{
-        const response = await axios.get("http://localhost:5000/api/auth/me", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
           headers: {Authorization: `Bearer ${token}`}
         })
         const role = response.data.role
@@ -34,9 +34,9 @@ function Admin(){
           navigate("/")
           return
         }
-        const productResponse = await axios.get("http://localhost:5000/api/products")
+        const productResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
         setProducts(productResponse.data)
-        const categoriesResponse = await axios.get("http://localhost:5000/api/categories")
+        const categoriesResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`)
         setCategories(categoriesResponse.data)
         setLoading(false)
       }catch(err){
@@ -48,10 +48,10 @@ function Admin(){
 
   async function addProduct(){
     try{
-      await axios.post("http://localhost:5000/api/products", {name, price, quantity, description, category_id, image_url},{
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, {name, price, quantity, description, category_id, image_url},{
         headers: {Authorization: `Bearer ${token}`}
       })
-      const productResponse = await axios.get("http://localhost:5000/api/products")
+      const productResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
       setProducts(productResponse.data)
       setName("")
       setPrice("")
@@ -66,10 +66,10 @@ function Admin(){
 
   async function editProduct(id){
     try{
-      await axios.put(`http://localhost:5000/api/products/${id}`, {name, price, quantity, description, category_id, image_url}, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {name, price, quantity, description, category_id, image_url}, {
         headers: {Authorization: `Bearer ${token}`}
       })
-      const productResponse = await axios.get("http://localhost:5000/api/products")
+      const productResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
       setProducts(productResponse.data)
       setName("")
       setPrice("")
@@ -84,7 +84,7 @@ function Admin(){
 
   async function deleteProduct(id){
     try{
-      await axios.delete(`http://localhost:5000/api/products/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setProducts(products.filter((item) => item.id !== id))

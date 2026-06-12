@@ -16,7 +16,7 @@ function ProductDetail(){
   useEffect(()=>{
     async function fetchProducts(){
       try{
-        const response = await axios.get(`http://localhost:5000/api/products/${id}`)
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
         setProduct(response.data[0])
         setLoading(false)
       }catch(err){
@@ -32,7 +32,7 @@ function ProductDetail(){
       return
     }
     try{
-      await axios.post("http://localhost:5000/api/cart", {product_id: product.id, quantity: 1}, {
+      await axios.post("${import.meta.env.VITE_API_URL}/api/cart", {product_id: product.id, quantity: 1}, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setMessage("Added to cart")

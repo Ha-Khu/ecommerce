@@ -14,7 +14,7 @@ function Register(){
 
   async function handleRegister(){
     try{
-      await axios.post("http://localhost:5000/api/auth/register", {firstName, lastName, email, password})
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {firstName, lastName, email, password})
       navigate("/login")
     }catch(err){
       setError("Registration Failed, please try again")

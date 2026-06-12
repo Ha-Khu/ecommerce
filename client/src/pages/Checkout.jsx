@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect } from "react"
-import {useState} from 'react'
+import { useState } from 'react'
 import axios from 'axios'
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 function Checkout(){
   const [cartItems, setCartItems] = useState([])
@@ -45,41 +44,81 @@ function Checkout(){
   }
 
   if(loading) return(
-    <p>Loading...</p>
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <p className="text-sm tracking-widest text-muted-foreground uppercase">Loading</p>
+    </div>
   )
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity , 0)
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return(
-    <Card>
-      <CardHeader>
-        <CardTitle>Checkout</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {
-          cartItems.map((cartItem)=>(
-            <div key={cartItem.id}>
-              <p>{cartItem.name}</p>
-              <p>{cartItem.price}</p>
-              <p>{cartItem.quantity}</p>
+    <div className="mx-auto max-w-4xl px-6 py-12">
+      <h1 className="mb-8 font-serif text-4xl font-semibold tracking-tight">Checkout</h1>
+
+      {error && <p className="mb-6 text-sm text-destructive">{error}</p>}
+
+      <div className="grid gap-8 md:grid-cols-3">
+        {/* Left: order details + options */}
+        <div className="space-y-6 md:col-span-2">
+          {/* Order items */}
+          <div className="rounded-xl border border-border bg-card p-6">
+            <h2 className="mb-4 font-serif text-xl font-medium">Order Summary</h2>
+            <div className="space-y-3">
+              {cartItems.map((cartItem)=>(
+                <div key={cartItem.id} className="flex items-center justify-between text-sm">
+                  <span>
+                    {cartItem.name}
+                    <span className="text-muted-foreground"> × {cartItem.quantity}</span>
+                  </span>
+                  <span className="font-medium">€{(cartItem.price * cartItem.quantity).toFixed(2)}</span>
+                </div>
+              ))}
             </div>
-          ))
-        }
-       {error && <p>{error}</p>}
-        <p>Total: {total}</p>
-        <p>Výber Platby:</p>
-        <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-          <option value="karta">Karta</option>
-          <option value="dobierka">Dobierka</option>
-        </select>
-        <p>Donáška:</p>
-        <select value={deliveryMethod} onChange={(e)=> setDeliveryMethod(e.target.value)}>
-          <option value="kurier">Kuriér</option>
-          <option value="packeta">Packeta</option>
-        </select>
-        <Button onClick={handleOrder}>Order</Button>
-      </CardContent>
-    </Card>
+          </div>
+
+          {/* Payment */}
+          <div className="rounded-xl border border-border bg-card p-6">
+            <label className="mb-3 block font-serif text-lg font-medium">Payment Method</label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent hover:cursor-pointer"
+            >
+              <option value="karta">Card</option>
+              <option value="dobierka">Cash on Delivery</option>
+            </select>
+          </div>
+
+          {/* Delivery */}
+          <div className="rounded-xl border border-border bg-card p-6">
+            <label className="mb-3 block font-serif text-lg font-medium">Delivery Method</label>
+            <select
+              value={deliveryMethod}
+              onChange={(e)=> setDeliveryMethod(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent hover:cursor-pointer"
+            >
+              <option value="kurier">Courier</option>
+              <option value="packeta">Packeta</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Right: total + place order */}
+        <div className="h-fit rounded-xl border border-border bg-card p-6">
+          <h2 className="font-serif text-xl font-medium">Total</h2>
+          <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+            <span className="text-sm text-muted-foreground">Amount</span>
+            <span className="text-2xl font-light">€{total.toFixed(2)}</span>
+          </div>
+          <Button
+            onClick={handleOrder}
+            className="mt-6 w-full bg-primary text-primary-foreground hover:bg-accent hover:cursor-pointer"
+          >
+            Place Order
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }
 

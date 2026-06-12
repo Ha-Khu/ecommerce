@@ -32,7 +32,7 @@ function ProductDetail(){
       return
     }
     try{
-      await axios.post("${import.meta.env.VITE_API_URL}/api/cart", {product_id: product.id, quantity: 1}, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/cart`, {product_id: product.id, quantity: 1}, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setMessage("Added to cart")

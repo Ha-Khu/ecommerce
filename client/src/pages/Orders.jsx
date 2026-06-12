@@ -17,7 +17,7 @@ function Orders(){
     }
     async function fetchOrders(){
       try{
-        const response = await axios.get("${import.meta.env.VITE_API_URL}/api/orders", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/orders`, {
           headers: {Authorization: `Bearer ${token}`}
         })
         setOrders(response.data)

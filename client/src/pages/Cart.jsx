@@ -18,7 +18,7 @@ function Cart(){
     }
     async function fetchCartItems(){
       try{
-        const response = await axios.get("${import.meta.env.VITE_API_URL}/api/cart", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
           headers: {Authorization: `Bearer ${token}`}
         })
         setCartItems(response.data)
@@ -47,7 +47,7 @@ function Cart(){
       await axios.put(`${import.meta.env.VITE_API_URL}/api/cart/${id}`, {quantity}, {
         headers: {Authorization: `Bearer ${token}`}
       })
-      const cartResponse = await axios.get("${import.meta.env.VITE_API_URL}/api/cart", {
+      const cartResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setCartItems(cartResponse.data)

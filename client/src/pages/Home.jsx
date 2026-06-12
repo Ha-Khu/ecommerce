@@ -14,9 +14,9 @@ function Home(){
   useEffect(()=>{
     async function fetchProducts(){
       try{
-        const response = await axios.get("${import.meta.env.VITE_API_URL}/api/products")
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
         setProducts(response.data)
-        const categoriesResponse = await axios.get("${import.meta.env.VITE_API_URL}/api/categories")
+        const categoriesResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/categories`)
         setCategories(categoriesResponse.data)
         setLoading(false)
       }catch(err){
@@ -32,7 +32,7 @@ function Home(){
     </div>
   )
 
-  const filteredProducts = products.filter((product)=>{
+  const filteredProducts = (Array.isArray(products) ? products : []).filter((product)=>{
     if(selectedCategory === "") return true
     return product.category_id === Number(selectedCategory)
   })

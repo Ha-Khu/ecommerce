@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect } from "react"
-import {useState} from 'react'
+import { useState } from 'react'
 import axios from 'axios'
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 function Admin(){
   const [products, setProducts] = useState([])
@@ -23,7 +22,7 @@ function Admin(){
   useEffect(()=>{
     if(!token){
       navigate("/login")
-      return      
+      return
     }
     async function adminCheck(){
       try{
@@ -85,7 +84,7 @@ function Admin(){
 
   async function deleteProduct(id){
     try{
-     await axios.delete(`http://localhost:5000/api/products/${id}`, {
+      await axios.delete(`http://localhost:5000/api/products/${id}`, {
         headers: {Authorization: `Bearer ${token}`}
       })
       setProducts(products.filter((item) => item.id !== id))
@@ -95,40 +94,109 @@ function Admin(){
   }
 
   if(loading) return(
-    <p>Loading...</p>
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <p className="text-sm tracking-widest text-muted-foreground uppercase">Loading</p>
+    </div>
   )
 
   return(
-    <Card>
-      <CardContent>
-        {
-          products.map((product)=> (
-            <div key={product.id}>
-              <p>{product.name}</p>
-              <p>{product.price}</p>
-              <p>{product.quantity}</p>
-              <p>{product.description}</p>
-              <p>{product.category_name}</p>
-              <Button onClick={() => deleteProduct(product.id)}>Delete Product</Button>
-              <Button onClick={() => editProduct(product.id)}>Edit product</Button>
+    <div className="mx-auto max-w-6xl px-6 py-12">
+      <h1 className="mb-8 font-serif text-4xl font-semibold tracking-tight">Admin Dashboard</h1>
+
+      {error && <p className="mb-6 text-sm text-destructive">{error}</p>}
+
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Add product form */}
+        <div className="h-fit rounded-xl border border-border bg-card p-6 lg:sticky lg:top-20">
+          <h2 className="mb-5 font-serif text-xl font-medium">Add / Edit Product</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">Name</label>
+              <Input placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-          ))
-        }
-        {error && <p>{error}</p>}
-        <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <Input placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <Input placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-        <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <Input placeholder="Image URL" value={image_url} onChange={(e) => setImage(e.target.value)} />
-        <select value={category_id} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="">Vyber kategóriu</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>{category.name}</option>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Price</label>
+                <Input placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Quantity</label>
+                <Input placeholder="0" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">Description</label>
+              <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">Image URL</label>
+              <Input placeholder="https://..." value={image_url} onChange={(e) => setImage(e.target.value)} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium">Category</label>
+              <select
+                value={category_id}
+                onChange={(e) => setCategoryId(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-4 py-2 text-sm outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent hover:cursor-pointer"
+              >
+                <option value="">Select category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+            </div>
+            <Button
+              onClick={addProduct}
+              className="w-full bg-primary text-primary-foreground hover:bg-accent hover:cursor-pointer"
+            >
+              Add Product
+            </Button>
+          </div>
+        </div>
+
+        {/* Product list */}
+        <div className="space-y-4 lg:col-span-2">
+          {products.map((product)=> (
+            <div
+              key={product.id}
+              className="flex items-center gap-4 rounded-lg border border-border bg-card p-4"
+            >
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-secondary">
+                {product.image_url ? (
+                  <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[10px] tracking-wide text-muted-foreground uppercase">
+                    No img
+                  </div>
+                )}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <h3 className="font-serif text-lg font-medium leading-tight">{product.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  €{product.price} · {product.quantity} pcs · {product.category_name}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 gap-2">
+                <button
+                  onClick={() => editProduct(product.id)}
+                  className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-secondary hover:cursor-pointer"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteProduct(product.id)}
+                  className="rounded-md border border-border px-3 py-1.5 text-sm text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground hover:cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           ))}
-      </select>
-        <Button onClick={addProduct}>Add Product</Button>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   )
 }
 
